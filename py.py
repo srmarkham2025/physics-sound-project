@@ -220,7 +220,7 @@ def generateDev(instrument_name, file_path, time):
     plt.xlabel("Harmonic Number")
     plt.ylabel("Deviation (Hz)")
     plt.xlim(1, 10) 
-    plt.ylim(-500, 500) 
+    plt.ylim(-100, 100) 
     plt.legend()
     save_path= f"static/{instrument_name.capitalize()}Deviation.png"
     plt.savefig(save_path)
