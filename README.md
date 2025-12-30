@@ -9,7 +9,7 @@ This project dynamically analyzes recordings of various musical instruments usin
 - Calculates overtone deviation from a typical standing wave.
 
 For more information on the physics, refer to this report.
-[Click Me]([https://example.com](https://livesunyjefferson-my.sharepoint.com/:w:/g/personal/smarkham1223_live_sunyjefferson_edu/IQDoCNTaVu3DQI0OstdGL-V9AUSri1CNPjnFMFSXADcKHqs?e=ixTmlE))
+[Click Me]([https://livesunyjefferson-my.sharepoint.com/:w:/g/personal/smarkham1223_live_sunyjefferson_edu/IQDoCNTaVu3DQI0OstdGL-V9AUSri1CNPjnFMFSXADcKHqs?e=ixTmlE])
 
 ## How to Use
 **Setup**
