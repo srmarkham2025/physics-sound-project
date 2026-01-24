@@ -23,5 +23,8 @@ For more information on the physics, refer to this report.
 **Running**
 ``uvicorn py:app``
 
+**FYI: To see the application, you must put /static/index.html. Otherwise, you won't see the graphs.**
+
 ## Requirements
 Python 3.9 is sufficient. Please look to requirements.txt for any additional tools.
+
