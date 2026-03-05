@@ -44,6 +44,22 @@
         </div>
        
         <h2>Generating Series Approximations</h2>
+        <h3 for="fftSlider">FFT Size (Time ↔ Frequency Resolution)</label>
+        <br>
+        <input 
+            type="range" 
+            id="fftSlider"
+            min="9"
+            max="15"
+            step="1"
+            value="11"
+            style="width: 500px; height: 40px;"
+        >
+        <span id="fftValue">2048</span>
+        <br>
+        <span id="warning" style = "color: red;"></span>
+        <br>
+
         <button onClick = "generateSeries()" >Calculate p(t)</button>
         <button onClick = "generateDeviation()" >Calculate Deviation</button>
         <br>
@@ -73,6 +89,21 @@
             const playHeads = {}
             const specs = {}
             const playHeadCxts = {}
+
+            const slider = document.getElementById("fftSlider");
+            const valueDisplay = document.getElementById("fftValue");
+            nFFT = document.getElementById("fftSlider").value;
+
+            slider.oninput = function() {
+                valueDisplay.textContent = Math.pow(2, this.value);
+                nFFT = Math.pow(2, this.value);
+                if (this.value > 13) {
+                    document.getElementById("warning").textContent = "Warning: High FFT sizes may cause performance issues.";
+                } else {
+                    document.getElementById("warning").textContent = "";
+                }
+            };
+
             for (let i = 0; i < 4; i++) {
                 const instrument = instruments[i];
                 const playHead = document.getElementById(instrument + "Canvas");
@@ -126,7 +157,7 @@
 
         async function generateSeries() {
             time = audio.currentTime;
-            const response = await axios.get(`/series?time=${time}`);
+            const response = await axios.get(`/series?time=${time}&nFFT=${nFFT}`);
 
 
             document.getElementById('violinSeries').innerHTML = "";
@@ -154,7 +185,7 @@
         }
 
         async function generateDeviation() {
-            const response = await axios.get(`/deviation?time=${time}`);
+            const response = await axios.get(`/deviation?time=${time}&nFFT=${nFFT}`);
 
 
             document.getElementById('violinDeviationPlot').innerHTML = "";

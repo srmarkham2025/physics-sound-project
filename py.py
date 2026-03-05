@@ -65,17 +65,17 @@ def get_spectrograms():
     return specs
 
 @app.get("/series")
-def seriesCalculation(time: float):
+def seriesCalculation(time: float, nFFT: int):
     series = {}
     for name, path in instruments.items():
         if name != "piano":
-            series[name] = generateSeries(name, path, time)
+            series[name] = generateSeries(name, path, time, nFFT)
     return series
 
-def generateSeries(instrument_name, file_path, time):
+def generateSeries(instrument_name, file_path, time, nFFT):
     y= audioCache[instrument_name]
     sr= audioSr[instrument_name]
-    FT = librosa.stft(y, n_fft=2048)  # updated n_fft
+    FT = librosa.stft(y, n_fft=nFFT, hop_length=512)  # updated n_fft
     mag = np.abs(FT)   
     hop = 512
     frame = int(time * sr / hop)
@@ -83,9 +83,9 @@ def generateSeries(instrument_name, file_path, time):
     print("Frame:", frame)
     ampslice = mag[:, frame]
     
-    peaks, _ = find_peaks(ampslice, height=np.max(ampslice)*0.075)
+    peaks, _ = find_peaks(ampslice, height=np.max(ampslice)*0.052)
     
-    frequencies = librosa.fft_frequencies(sr=sr, n_fft=2048)  # updated n_fft
+    frequencies = librosa.fft_frequencies(sr=sr, n_fft=nFFT)  # updated n_fft
     peakfreqs = frequencies[peaks]
 
     if len(peakfreqs) == 0:
@@ -136,26 +136,26 @@ def generateSeries(instrument_name, file_path, time):
     return {"equation": equation, "file": f"{instrument_name.capitalize()}Series.png"}
 
 @app.get("/deviation")
-def devCalculation(time: float):
+def devCalculation(time: float, nFFT: int):
     deviations = {}
     for name, path in instruments.items():
         if name != "piano":
-            deviations[name] = generateDev(name, path, time)
+            deviations[name] = generateDev(name, path, time, nFFT)
     return deviations
 
-def generateDev(instrument_name, file_path, time):
+def generateDev(instrument_name, file_path, time, nFFT):
     y= audioCache[instrument_name]
     sr= audioSr[instrument_name]
-    FT = librosa.stft(y, n_fft=2048)  # updated n_fft
+    FT = librosa.stft(y, n_fft=nFFT, hop_length=512)  # updated n_fft
     mag = np.abs(FT)   
     hop = 512
     frame = int(time * sr / hop)
     frame = min(frame, mag.shape[1] - 1)
     ampslice = mag[:, frame]
     
-    peaks, _ = find_peaks(ampslice, height=np.max(ampslice)*0.075)
+    peaks, _ = find_peaks(ampslice, height=np.max(ampslice)*0.052)
     
-    frequencies = librosa.fft_frequencies(sr=sr, n_fft=2048)  # updated n_fft
+    frequencies = librosa.fft_frequencies(sr=sr, n_fft=nFFT)  # updated n_fft
     peakfreqs = frequencies[peaks]
     Amps = ampslice[peaks]
     overtones = []
@@ -220,7 +220,7 @@ def generateDev(instrument_name, file_path, time):
     plt.xlabel("Harmonic Number")
     plt.ylabel("Deviation (Hz)")
     plt.xlim(1, 10) 
-    plt.ylim(-100, 100) 
+    plt.ylim(-10, 10) 
     plt.legend()
     save_path= f"static/{instrument_name.capitalize()}Deviation.png"
     plt.savefig(save_path)
